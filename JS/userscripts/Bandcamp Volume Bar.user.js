@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Bandcamp Volume Bar
-// @version      2
+// @version      2.1
 // @description  adds a volume bar to Bandcamp
 // @author       @HiImBlu, CyberFoxar
 // @match        *://*.bandcamp.com/*
@@ -37,11 +37,10 @@ document
 // $(".volume").append("<span class='volumeInner'></span>");
 
 //CSS Time!
-var percentage = 75;
-var speakerurl = "http://i.imgur.com/hRWrLHJ.png";
-var muteurl = "http://i.imgur.com/5mxvYNN.png";
-var color = document.querySelector("#pgBd").style.backgroundColor // $("#pgBd").css("background-color");
-var css =
+let percentage = 75; // will be reassigned
+const speakerurl = "http://i.imgur.com/hRWrLHJ.png";
+const muteurl = "http://i.imgur.com/5mxvYNN.png";
+const css =
   ".volumeControl { margin-bottom: 10px; }" +
   ".speaker {" +
   "position: relative;" +
@@ -75,17 +74,17 @@ var css =
 GM_addStyle(css);
 
 //Sexy Script!
-let source = document.querySelector(".audioSource");
-let volume = document.querySelector(".volume");
-let body = document.body;
-let speaker = document.querySelector(".speaker");
-let volumeInner = document.querySelector(".volumeInner");
+const source = document.querySelector(".audioSource");
+const volume = document.querySelector(".volume");
+const body = document.body;
+const speaker = document.querySelector(".speaker");
+const volumeInner = document.querySelector(".volumeInner");
 
 source.volume = percentage / 100;
 
 function changeVolume(e) {
-  let clickPos = e.pageX - volume.offsetLeft; // $(".volume").offset().left;
-  let maxWidth = volume.clientWidth; //$(".volume").width();
+  const clickPos = e.pageX - volume.offsetLeft; // $(".volume").offset().left;
+  const maxWidth = volume.clientWidth; //$(".volume").width();
   percentage = Math.floor((clickPos / maxWidth) * 100);
   if (percentage > 100) {
     percentage = 100;
@@ -128,9 +127,9 @@ document.addEventListener("mouseup", function() {
   }); */
 });
 
-var mute = false;
+let mute = false;
 // $(".speaker").click(
-document.querySelector(".speaker").addEventListener("click", function() {
+speaker.addEventListener("click", function() {
   if (mute) {
     mute = false;
     // $(".speaker").css("background-image", "url('" + speakerurl + "')");
@@ -157,7 +156,7 @@ document.querySelector(".speaker").addEventListener("click", function() {
  * @return {Element}
  */
 function htmlToElement(html) {
-  var template = document.createElement("template");
+  const template = document.createElement("template");
   html = html.trim(); // Never return a text node of whitespace as the result
   template.innerHTML = html;
   return template.content.firstChild;
