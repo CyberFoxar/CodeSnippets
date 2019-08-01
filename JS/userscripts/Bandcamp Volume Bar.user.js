@@ -7,8 +7,8 @@
 // @match        *lapfoxtrax.com/*
 // @exclude      *://bandcamp.com/
 // @grant        GM_addStyle
-// @downloadURL https://github.com/CyberFoxar/CodeSnippets/blob/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
-// @updateURL https://github.com/CyberFoxar/CodeSnippets/blob/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
+// @downloadURL https://github.com/CyberFoxar/CodeSnippets/raw/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
+// @updateURL https://github.com/CyberFoxar/CodeSnippets/raw/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
 // @require https://code.jquery.com/jquery-3.4.1.min.js
 // @namespace cyberfoxar.tk
 // ==/UserScript==
