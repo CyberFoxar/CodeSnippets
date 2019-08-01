@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Bandcamp Volume Bar
-// @version      1.7
+// @version      2
 // @description  adds a volume bar to Bandcamp
 // @author       @HiImBlu, CyberFoxar
 // @match        *://*.bandcamp.com/*
@@ -9,104 +9,156 @@
 // @grant        GM_addStyle
 // @downloadURL https://github.com/CyberFoxar/CodeSnippets/raw/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
 // @updateURL https://github.com/CyberFoxar/CodeSnippets/raw/master/JS/userscripts/Bandcamp%20Volume%20Bar.user.js
-// @require https://code.jquery.com/jquery-3.4.1.min.js
 // @namespace cyberfoxar.tk
 // ==/UserScript==
 
-
 //Awesome Tags!
-$("audio").attr("id", "audioSource");
-$("<div class='volumeControl'></div>").insertAfter(".inline_player");
-$(".volumeControl").append("<div class='speaker'></div>");
-$(".volumeControl").append("<div class='volume'></div>");
-$(".volume").append("<span class='volumeInner'></span>");
+document
+  .querySelectorAll("audio")
+  .forEach(el => el.classList.add("audioSource"));
+let volumeControl = htmlToElement("<div class='volumeControl'></div>");
+let player = document.querySelector(".inline_player");
+player.after(volumeControl);
+
+document
+  .querySelector(".volumeControl")
+  .append(htmlToElement("<div class='speaker'></div>"));
+document
+  .querySelector(".volumeControl")
+  .append(htmlToElement("<div class='volume'></div>"));
+document
+  .querySelector(".volume")
+  .append(htmlToElement("<span class='volumeInner'></span>"));
+
+// $("audio").attr("id", "audioSource");
+// $("<div class='volumeControl'></div>").insertAfter(".inline_player");
+// $(".volumeControl").append("<div class='speaker'></div>");
+// $(".volumeControl").append("<div class='volume'></div>");
+// $(".volume").append("<span class='volumeInner'></span>");
 
 //CSS Time!
 var percentage = 75;
 var speakerurl = "http://i.imgur.com/hRWrLHJ.png";
 var muteurl = "http://i.imgur.com/5mxvYNN.png";
-var color = $("#pgBd").css("background-color");
-var css = ".volumeControl { margin-bottom: 10px; }"                                            +
-          ".speaker {"                                                                         +
-            "position: relative;"                                                              +
-            "width: 50px;"                                                                     +
-            "height: 50px;"                                                                    +
-            "background: url('"+speakerurl+"') rgba(2,2,2,.1) 50% 50% no-repeat;"              +
-            "border-radius: 3px;"                                                              +
-            "cursor: pointer;"                                                                 +
-          "}"                                                                                  +
-          ".volumeInner {"                                                                     +
-            "position: absolute;"                                                              +
-            "bottom: 0;"                                                                       +
-            "width: "+percentage+"%;"                                                          +
-            "height: 20px;"                                                                    +
-            "background-color: #fff;"                                                          +
-          "}"                                                                                  +
-          ".volume {"                                                                          +
-            "position: relative;"                                                              +
-            "width: 80%;"                                                                      +
-            "height: 20px;"                                                                    +
-            "margin-top: -35px;"                                                               +
-            "float: right;"                                                                    +
-            "cursor: pointer;"                                                                 +
-            "background-color: rgba(2,2,2,.1);"                                                +
-            "border: 1px solid rgba(190,190,190,.5);"                                          +
-          "}"                                                                                  ;
+var color = document.querySelector("#pgBd").style.backgroundColor // $("#pgBd").css("background-color");
+var css =
+  ".volumeControl { margin-bottom: 10px; }" +
+  ".speaker {" +
+  "position: relative;" +
+  "width: 50px;" +
+  "height: 50px;" +
+  "background: url('" +
+  speakerurl +
+  "') rgba(2,2,2,.1) 50% 50% no-repeat;" +
+  "border-radius: 3px;" +
+  "cursor: pointer;" +
+  "}" +
+  ".volumeInner {" +
+  "position: absolute;" +
+  "bottom: 0;" +
+  "width: " +
+  percentage +
+  "%;" +
+  "height: 20px;" +
+  "background-color: #fff;" +
+  "}" +
+  ".volume {" +
+  "position: relative;" +
+  "width: 80%;" +
+  "height: 20px;" +
+  "margin-top: -35px;" +
+  "float: right;" +
+  "cursor: pointer;" +
+  "background-color: rgba(2,2,2,.1);" +
+  "border: 1px solid rgba(190,190,190,.5);" +
+  "}";
 GM_addStyle(css);
 
 //Sexy Script!
-let source = $("#audioSource")[0];
+let source = document.querySelector(".audioSource");
+let volume = document.querySelector(".volume");
+let body = document.body;
+let speaker = document.querySelector(".speaker");
+let volumeInner = document.querySelector(".volumeInner");
 
-source.volume = percentage/100;
-
+source.volume = percentage / 100;
 
 function changeVolume(e) {
-	var clickPos = (e.pageX) - $(".volume").offset().left;
-	var maxWidth = $(".volume").width();
-	percentage = Math.floor(clickPos / maxWidth * 100);
-    if(percentage > 100) {
-        percentage = 100;
-        $(".volumeInner").css("width", "100%");
-    } else if(percentage < 0) {
-        percentage = 0;
-        $(".volumeInner").css("width", "0%");
-    } else {
-        $(".volumeInner").css("width", percentage + "%");
-    }
-    
-	source.volume = percentage/100;
+  let clickPos = e.pageX - volume.offsetLeft; // $(".volume").offset().left;
+  let maxWidth = volume.clientWidth; //$(".volume").width();
+  percentage = Math.floor((clickPos / maxWidth) * 100);
+  if (percentage > 100) {
+    percentage = 100;
+    // $(".volumeInner").css("width", "100%");
+    volumeInner.style.width = "100%";
+  } else if (percentage < 0) {
+    percentage = 0;
+    // $(".volumeInner").css("width", "0%");
+    volumeInner.style.width = "0%";
+  } else {
+    // $(".volumeInner").css("width", percentage + "%");
+    volumeInner.style.width = percentage + "%";
+  }
+
+  source.volume = percentage / 100;
 }
 
-$(".volume").mousedown(function(e){
-    console.log("volume bar clicked");
+// $(".volume").mousedown(
+volume.addEventListener("mousedown", function(e) {
+  console.log("volume bar clicked");
+  changeVolume(e);
+  /* $("body").css({
+    "-webkit-user-select": "none",
+    "-moz-user-select": "none"
+  }); */
+  body.addEventListener("mousemove", changeVolume(e));
+  /* $("body").mousemove(function(e) {
     changeVolume(e);
-    $("body").css({
-        "-webkit-user-select": "none",
-        "-moz-user-select": "none"
-    });
-    
-	$("body").mousemove(function(e){ changeVolume(e); });
+  }); */
 });
 
-$(document).mouseup(function(){
-    $("body").off("mousemove");
-    $("body").css({
-        "-webkit-user-select": "all",
-        "-moz-user-select": "all"
-    });
+//$(document).mouseup(
+document.addEventListener("mouseup", function() {
+  body.removeEventListener("mousemove", changeVolume);
+  /*
+  $("body").off("mousemove");
+  $("body").css({
+    "-webkit-user-select": "all",
+    "-moz-user-select": "all"
+  }); */
 });
 
 var mute = false;
-$(".speaker").click(function(){
-    if(mute) {
-        mute = false;
-        $(".speaker").css("background-image", "url('"+speakerurl+"')");
-        $(".volumeInner").css("width", percentage + "%");
-        source.volume = percentage/100;
-    } else {
-        mute = true;
-        $(".speaker").css("background-image", "url('"+muteurl+"')");
-        source.volume = 0;
-        $(".volumeInner").css("width", "0%");
-    }
+// $(".speaker").click(
+document.querySelector(".speaker").addEventListener("click", function() {
+  if (mute) {
+    mute = false;
+    // $(".speaker").css("background-image", "url('" + speakerurl + "')");
+    speaker.style.backgroundImage = "url('" + speakerurl + "')";
+    //$(".volumeInner").css("width", percentage + "%");
+    volumeInner.style.width = percentage + "%";
+    source.volume = percentage / 100;
+  } else {
+    mute = true;
+    // $(".speaker").css("background-image", "url('" + muteurl + "')");
+    speaker.style.backgroundImage = "url('" + muteurl + "')";
+    source.volume = 0;
+    //$(".volumeInner").css("width", "0%");
+    volumeInner.style.width = "0%"
+  }
 });
+
+// Awesome tools !
+/**
+ * Returns a valid HTML element from a string.
+ * HTML5+ compatible only.
+ * from : https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+function htmlToElement(html) {
+  var template = document.createElement("template");
+  html = html.trim(); // Never return a text node of whitespace as the result
+  template.innerHTML = html;
+  return template.content.firstChild;
+}
