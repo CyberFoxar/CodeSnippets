@@ -12,12 +12,12 @@
 // @namespace cyberfoxar.tk
 // ==/UserScript==
 
-//Awesome Tags!
+//Build the stuff !
 document
   .querySelectorAll("audio")
   .forEach(el => el.classList.add("audioSource"));
-let volumeControl = htmlToElement("<div class='volumeControl'></div>");
-let player = document.querySelector(".inline_player");
+const volumeControl = htmlToElement("<div class='volumeControl'></div>");
+const player = document.querySelector(".inline_player");
 player.after(volumeControl);
 
 document
