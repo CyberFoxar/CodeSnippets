@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Bandcamp Volume Bar
-// @version      2.1
+// @version      2.2
 // @description  adds a volume bar to Bandcamp
 // @author       @HiImBlu, CyberFoxar
 // @match        *://*.bandcamp.com/*
@@ -83,7 +83,7 @@ const volumeInner = document.querySelector(".volumeInner");
 source.volume = percentage / 100;
 
 function changeVolume(e) {
-  const clickPos = e.pageX - volume.offsetLeft; // $(".volume").offset().left;
+  const clickPos = e.offsetX // e.pageX - volume.offsetLeft; // $(".volume").offset().left;
   const maxWidth = volume.clientWidth; //$(".volume").width();
   percentage = Math.floor((clickPos / maxWidth) * 100);
   if (percentage > 100) {
